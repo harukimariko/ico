@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.collider.CompareTag("Ground"))
         {
-            _animator.SetBool("Jump", false);
             _isGround = true;
         }
     }
@@ -64,7 +63,6 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
         {
             _isGround = false;
-            _animator.SetBool("Jump", true);
         }
     }
 
