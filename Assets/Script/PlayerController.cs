@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonDown("Jump")&& _isGround)
         {
+            _animator.SetBool("Jump", true);
             _rb.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
             _isGround = false;
         }
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.collider.CompareTag("Ground"))
         {
+            _animator.SetBool("Jump", false);
             _isGround = true;
         }
     }
@@ -62,6 +64,7 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
         {
             _isGround = false;
+            _animator.SetBool("Jump", true);
         }
     }
 
