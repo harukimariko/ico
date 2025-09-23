@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0.0f, 10.0f)] private float _jumpForce = 5.0f;
     [SerializeField] private bool _isGround = false;
 
+    [Header("アニメーション関係")]
+    [SerializeField] private Animator _animator;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
