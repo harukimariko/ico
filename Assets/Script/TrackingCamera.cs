@@ -1,43 +1,77 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TrackingCamera : MonoBehaviour
+public class ThirdPersonCamera : MonoBehaviour
 {
-    [Header("制御パラメータ")]
-    [SerializeField] private Transform _owner; // 自分自身
-    [SerializeField] private Transform _target; // ターゲット
-    [SerializeField] private Vector3 _offset = Vector3.zero;    // オフセット値
-    [SerializeField, Range(1.0f, 20.0f)] private float _distance = 10.0f; // 距離
-    [SerializeField, Range(0.0f, 1.0f)] private float _lerpStrength = 1.0f;
+    [Header("ターゲット")]
+    [SerializeField] private Transform target;
+    [SerializeField] private Vector3 offset = new Vector3(0, 2f, -4f);
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    [Header("カメラ設定")]
+    [SerializeField] private float mouseSensitivity = 150f;
+    [SerializeField] private float minPitch = -35f;
+    [SerializeField] private float maxPitch = 60f;
+    [SerializeField] private float defaultDistance = 4f;
+    [SerializeField] private float smoothSpeed = 10f;
+
+    [Header("当たり判定")]
+    [SerializeField] private LayerMask collisionMask;
+    [SerializeField] private float collisionBuffer = 0.2f; // 壁に近づく余裕
+
+    private float yaw;
+    private float pitch;
+    private float currentDistance;
+    private Vector3 currentPos;
+
+    void Start()
     {
-        if (_owner == null) _owner = transform;
-        if (_target == null)
-        {
-            GameObject target = GameObject.FindGameObjectWithTag("Player");
-            if (target != null) _target = target.transform;
-        }
+        Vector3 angles = transform.eulerAngles;
+        yaw = angles.y;
+        pitch = angles.x;
+        currentDistance = defaultDistance;
+        currentPos = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        float distance = Vector3.Distance(_target.position, transform.position);
+        if (!target) return;
 
-        if (_target != null && distance > _distance)
+        // --- マウス入力 ---
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        yaw += mouseX;
+        pitch -= mouseY;
+        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+
+        // --- カメラ回転 ---
+        Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
+
+        // --- デフォルトの理想位置 ---
+        Vector3 idealOffset = new Vector3(0, offset.y, -defaultDistance);
+        Vector3 desiredPosition = target.position + rotation * idealOffset;
+
+        // --- 壁との当たり判定（ズームイン） ---
+        Vector3 targetCenter = target.position + Vector3.up * offset.y;
+        if (Physics.Linecast(targetCenter, desiredPosition, out RaycastHit hit, collisionMask))
         {
-
-            Vector3 position = Vector3.zero;
-
-            // 座標を計算
-            position = Vector3.Lerp(transform.position, _target.position + _offset,  _lerpStrength * Time.deltaTime);
-
-            // 座標値を加算
-            transform.position = position;
+            // 衝突距離 - バッファを現在の距離として使用
+            currentDistance = Mathf.Clamp(Vector3.Distance(targetCenter, hit.point) - collisionBuffer, 0.5f, defaultDistance);
         }
-        // ターゲットの方向を向く
-        _owner.LookAt(_target.position);
+        else
+        {
+            // 衝突していなければ徐々に元の距離に戻す
+            currentDistance = Mathf.Lerp(currentDistance, defaultDistance, Time.deltaTime * smoothSpeed);
+        }
+
+        // --- カメラの最終位置 ---
+        Vector3 finalOffset = new Vector3(0, offset.y, -currentDistance);
+        desiredPosition = target.position + rotation * finalOffset;
+
+        // --- スムーズ移動 ---
+        currentPos = Vector3.Lerp(currentPos, desiredPosition, Time.deltaTime * smoothSpeed);
+        transform.position = currentPos;
+
+        // --- カメラ方向 ---
+        transform.LookAt(target.position + Vector3.up * offset.y);
     }
 }
