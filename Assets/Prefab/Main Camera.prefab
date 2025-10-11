@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 2157606771679290034}
   - component: {fileID: 7302070095852010067}
   - component: {fileID: 8933991596273990074}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Iris_Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +598,7 @@ GameObject:
   - component: {fileID: 7257483986381405095}
   - component: {fileID: 4379322048990665257}
   - component: {fileID: 3885307861328176051}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: UI_Front_Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,7 +659,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
