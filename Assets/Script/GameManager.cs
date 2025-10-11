@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System;
 
 public enum PlayState
 {
+    Ready,
     Play,
     Stop,
     Defeat,
@@ -20,6 +22,9 @@ public class GameManager : MonoBehaviour
     public float _hp { get; private set; }
     [SerializeField] private Text _hpText;
 
+    [Header("UI制御")]
+    [SerializeField] private IrisShot _irisShot;
+    [SerializeField] private FadeMachine _fadeMachine;
 
     private void Awake()
     {
@@ -32,25 +37,32 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
 
         _instance.InitGame();
-    }
-
-    public void InitGame()
-    {
-        SetHp(0);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // 新しいシーンの中からScoreTextを探す
         GameObject textObj = GameObject.Find("ScoreText");
-        if (textObj != null)
-        {
-            UpdateUI(); // 表示を更新
-        }
+        InitGame();
+    }
+
+    public void InitGame()
+    {
+        // HPの初期化
+        SetHp(0);
+
+        // カーソルを表示する
+        Cursor.visible = true;
+
+        // カーソルを固定しない（画面外に動かせるようにする）
+        Cursor.lockState = CursorLockMode.None;
+
+        // アイリスイン
+        _irisShot.IrisIn();
     }
 
     public void ChangeState(PlayState state)
@@ -61,14 +73,14 @@ public class GameManager : MonoBehaviour
     public void SetHp(float hp)
     {
         _hp = hp;
-        UpdateUI();
+        _hpText.text = _hp.ToString("F2");
     }
 
-    private void UpdateUI()
+    private void SetActiveGameObjects(List<GameObject> list, bool key)
     {
-        if (_hpText != null)
+        foreach(var obj in list)
         {
-            _hpText.text = _hp.ToString("F2");
+            obj.SetActive(key);
         }
     }
 

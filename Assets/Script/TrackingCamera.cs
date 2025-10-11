@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class ThirdPersonCamera : MonoBehaviour
     [SerializeField] private LayerMask collisionMask;
     [SerializeField] private float collisionBuffer = 0.2f; // 壁に近づく余裕
 
+    [Header("子カメラ")]
+    [SerializeField] private List<GameObject> _cameraList;
+
     private float yaw;
     private float pitch;
     private float currentDistance;
@@ -24,6 +28,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void Start()
     {
+        if (target == null) target = GameObject.FindGameObjectWithTag("Player").transform;
         Vector3 angles = transform.eulerAngles;
         yaw = angles.y;
         pitch = angles.x;
@@ -73,5 +78,11 @@ public class ThirdPersonCamera : MonoBehaviour
 
         // --- カメラ方向 ---
         transform.LookAt(target.position + Vector3.up * offset.y);
+
+        foreach (var camera in _cameraList)
+        {
+            camera.transform.position = transform.position;
+            camera.transform.rotation = transform.rotation;
+        }
     }
 }

@@ -647,6 +647,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   collisionBuffer: 1.3
+  _cameraList: []
 --- !u!1 &360822246
 GameObject:
   m_ObjectHideFlags: 0
