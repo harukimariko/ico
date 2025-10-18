@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ThirdPersonCamera : MonoBehaviour
+public class TrackingCamera : MonoBehaviour
 {
     [Header("ターゲット")]
     [SerializeField] private Transform target;
