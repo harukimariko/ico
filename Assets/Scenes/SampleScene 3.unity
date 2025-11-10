@@ -5196,7 +5196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5476442281412009398, guid: 02e56b2190c1f764a9f1cbba92957710, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6553126403532014843, guid: 02e56b2190c1f764a9f1cbba92957710, type: 3}
       propertyPath: TrailModule.enabled
@@ -5258,6 +5258,10 @@ PrefabInstance:
       propertyPath: _target
       value: 
       objectReference: {fileID: 615984585}
+    - target: {fileID: 7477253432962314238, guid: 02e56b2190c1f764a9f1cbba92957710, type: 3}
+      propertyPath: _emitCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7477253432962314238, guid: 02e56b2190c1f764a9f1cbba92957710, type: 3}
       propertyPath: _moveSpeed
       value: 200

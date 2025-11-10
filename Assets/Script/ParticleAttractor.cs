@@ -35,7 +35,8 @@ public class ParticleAttractor : MonoBehaviour
 
     void Update()
     {
-        if (_triggerWithSpace && Input.GetKeyDown(KeyCode.L))
+        //if (_triggerWithSpace && Input.GetKeyDown(KeyCode.L))
+        if (_triggerWithSpace)
         {
             _ps.Emit(_emitCount);
         }
